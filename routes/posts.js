@@ -35,8 +35,11 @@ router.post("/",authenticate.verifyUser, async (req, res) => {
  });
   try {
     const savedPost = await newPost.save();
-    const{ img,updatedAt,likes,comments,__v,userId, ...other} = savedPost._doc
-    res.status(200).json(other);
+    res.status(200).json({Post_Id:savedPost._id,
+    title: savedPost.title,
+    description: savedPost.description,
+    createdAt: savedPost.createdAt
+  });
   } catch (err) {
     res.status(500).json(err);
   }

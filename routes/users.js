@@ -45,6 +45,7 @@ router.delete("/:id", async (req, res) => {
 router.get("/user",authenticate.verifyUser, async (req, res) => {
   try {
     const user = await req.user
+    console.log(user._id)
     res.status(200).json({
       username : user.username,
       followers : user.followers.length,

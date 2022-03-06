@@ -4,26 +4,7 @@ const User = require("../models/User");
 const authenticate = require("../authenticate")
 const passport = require("passport")
 
-//delete a post
 
-router.delete("/:id",authenticate.verifyUser, async (req, res) => {
-  console.log(req.params.id)
-  console.log(req.user._id)
-  try {
-    const post = await Post.findById(req.params.id);
-
-    console.log(post)
-    if (post.userId == req.user._id) {
-
-      post.deleteOne();
-      res.status(200).json("the post has been deleted");
-    } else {
-      res.status(403).json("you can delete only your post");
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
 
 //create a post
 
@@ -44,6 +25,38 @@ router.post("/",authenticate.verifyUser, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+//get timeline posts done
+router.get("/all_posts", authenticate.verifyUser,  async (req, res) => {
+  User.findById(req.user._id).then(user => {
+    Post.find({
+      userId: user._id
+    }).then(posts => {
+      res.json({
+        posts: posts
+      })
+    })
+  })
+});
+
+//get a post DONE
+
+router.get("/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    res.status(200).json({_id: post._id,
+    title: post.title,
+    description: post.description,
+    createdAt: post.createdAt,
+    comments: post.comments,
+    likes: post.likes.length
+  });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //update a post
 
 router.put("/:id", async (req, res) => {
@@ -96,37 +109,6 @@ router.post("/dislike/:id",authenticate.verifyUser, async (req, res) => {
   }
 });
 
-//get timeline posts done
-router.get("/all", authenticate.verifyUser,  async (req, res) => {
-  User.findById(req.user._id).then(user => {
-    Post.find({
-      userId: user._id
-    }).then(posts => {
-      res.json({
-        posts: posts
-      })
-    })
-  })
-});
-
-//get a post DONE
-
-router.get("/:id", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    res.status(200).json({_id: post._id,
-    title: post.title,
-    description: post.description,
-    createdAt: post.createdAt,
-    comments: post.comments,
-    likes: post.likes.length
-  });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-
 //Comment on a post
 router.post("/comment/:id",authenticate.verifyUser, async (req, res)=>{
   try{
@@ -142,5 +124,26 @@ router.post("/comment/:id",authenticate.verifyUser, async (req, res)=>{
   }
 
 })
+
+//delete a post
+
+router.delete("/:id",authenticate.verifyUser, async (req, res) => {
+  console.log(req.params.id)
+  console.log(req.user._id)
+  try {
+    const post = await Post.findById(req.params.id);
+
+    console.log(post)
+    if (post.userId == req.user._id) {
+
+      post.deleteOne();
+      res.status(200).json("the post has been deleted");
+    } else {
+      res.status(403).json("you can delete only your post");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;

@@ -11,7 +11,7 @@ const passport = require("passport")
 require('./authenticate')
 dotenv.config();
 
-mongoose.connect("mongodb://localhost/social", {useNewUrlParser:true, useUnifiedTopology:true},(err)=> {
+mongoose.connect("mongodb+srv://sai:alok1966@cluster0.dpi7c.mongodb.net/myFirstDatabase?authSource=admin&replicaSet=atlas-11gzqr-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true", {useNewUrlParser:true, useUnifiedTopology:true},(err)=> {
   if(err)   console.log(err.message);
 });
 

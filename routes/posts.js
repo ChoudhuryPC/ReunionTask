@@ -117,7 +117,7 @@ router.post("/comment/:id",authenticate.verifyUser, async (req, res)=>{
     post.comments.push({comment: req.body.comment,
       authorId: req.user._id})
     await post.save()
-    res.status(200).json(post.comments[post.comments.length]._id)
+    res.status(200).json(post.comments[post.comments.length-1]._id)
 
   }catch(err) {
     res.status(403).json(err);

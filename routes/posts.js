@@ -32,7 +32,7 @@ router.get("/all_posts", authenticate.verifyUser,  async (req, res) => {
   User.findById(req.user._id).then(user => {
     Post.find({
       userId: user._id
-    }).then(posts => {
+    }).sort({'createdAt':'desc'}).then(posts => {
       res.json({
         posts: posts
       })
@@ -75,7 +75,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//like / dislike a post
+//like  a post
 
 router.post("/like/:id",authenticate.verifyUser, async (req, res) => {
   try {
@@ -92,6 +92,8 @@ router.post("/like/:id",authenticate.verifyUser, async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
 //dislike a post
 router.post("/dislike/:id",authenticate.verifyUser, async (req, res) => {
   try {
